@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -22,7 +23,7 @@ class HomeController extends Controller
         $products = $products->get();
         return view("detail",compact('giays','products'));
     }
-   // Dang Nhap
+   // View dang nhap
     public function loginview()
     {
         if(empty($_COOKIE['id']))
@@ -42,13 +43,13 @@ class HomeController extends Controller
         return view("login",['loginError'=>"",'SignUpError'=>"",'ck'=>$cookie],compact('info'));
         }
     }
+    //Dang xuat
     public function logout()
     {
         setcookie("id", null, time()-3600); 
-
         return view("login",['loginError'=>"",'SignUpError'=>""]);
     }
-    // Dang Nhap
+    // Kiem Tra Dang Nhap
     public function dangnhap()
     {
         $username= $_GET['user_name'];
@@ -86,7 +87,6 @@ class HomeController extends Controller
        }
        else
        {
-      
         DB::table('taikhoan')->insert(
             array(
                     'MaTaiKhoan' => (DB::table('taikhoan')->max('MaTaiKhoan'))+1,
@@ -174,8 +174,8 @@ class HomeController extends Controller
             ->select('giay.*', 'giohang.SoLuong')
             ->get();
         }
-
-        return view("cart",compact('products'),['total'=>$this->gettotal()]);
+         $bill=$this->get_historyBill();
+        return view("cart",compact('products'),['total'=>$this->gettotal(),'bill'=>$bill]);
     }
     //xoa toan bo san pham khoi gio hang
     public function xoatoanbo()
@@ -192,19 +192,14 @@ class HomeController extends Controller
                 ->where('MaSanPham',$row->MaGiay)
                 ->delete();
             }
-            return view("cart",compact("products"),['total'=>$this->gettotal()]);
+            return back(); // reload lai gio hang khi xoa
         }
         else
         {
-            $products = DB::table('giay')
-            ->join('giohang', 'giay.MaGiay', '=', 'giohang.MaSanPham')->where('MaTaiKhoan',0)
-            ->select('giay.*', 'giohang.SoLuong')
-            ->get();
-            return view("cart",compact("products"),['total'=>$this->gettotal()]);
+            return back();
         }
-        
     }
-    //them 1 san pham vao gio hang
+//them 1 san pham vao gio hang
     public function addcart($id)
     { 
         if(isset($_COOKIE['id']))
@@ -233,41 +228,134 @@ class HomeController extends Controller
                     )
                );
               }
-              $products = DB::table('giay')
-              ->join('giohang', 'giay.MaGiay', '=', 'giohang.MaSanPham')->where('MaTaiKhoan',$_COOKIE['id'])
-              ->select('giay.*', 'giohang.SoLuong')
-              ->get();
-            return view("cart",compact('products'),['total'=>$this->gettotal()]);
+            return redirect()->to("/gh");
         }
         else 
-        {
-            $giays = DB::table('giay')->select('*');
-            $giays = $giays->get();     
+        {   
             return $this->loginview();
         }
     }
-  //lay tong tien trong gio hang
-  public  function gettotal()
-    {
-        if(isset($_COOKIE['id']))
-        {
-        $sum=0;
+
+  //cap nhat gio hang
+  public function capnhatgh(Request $request,$id)
+    {   
+            $cart= DB::table('giohang')->where('MaTaiKhoan',$_COOKIE['id'])->select('*');
+            $cart=$cart->get();
+            foreach($cart as $row)
+              {
+                    if($row->MaSanPham==$id)
+                    {
+                        $them= DB::table('giohang')
+                        ->where('MaSanPham', $id)
+                        ->update(['SoLuong'=>$request->SoLuong]);
+                    }
+              }
+} 
+// view form thanh toan
+  public function checkoutview()
+  {
+    if(isset($_COOKIE['id']))
+     return view("checkout",['total'=>$this->gettotal()]);
+    return view("checkout",['total'=>0]);
+  }
+  // thanh toan
+  public function thanhtoan()
+  {  
+    $mahd=DB::table('hoadon')->max('MaHD');
+    if(isset($_COOKIE['id']))
+    {   
+        DB::table('hoadon')->insert(
+            array(
+                    'MaHD' => ($mahd+1),
+                   'NgayLapHD'  => Carbon::now(), 
+                   'MaTaiKhoan' =>  $_COOKIE['id'],
+                   'NoiChuyen'=>$_GET['address'],
+                   'TinhTrang'=>'Đang Chờ',
+            )
+       );
+       DB::table('ct_hoadon')->insert(
+        array(
+                'MaHD' => ($mahd+1),
+               'MaGiay'  => $this->getProducts_string(), 
+               'SoLuong' =>  $this->get_total_amount(),
+               'DonGia'=> $this->gettotal(),
+               'HoTen'=>$_GET['first_name'],
+               'Email'=>$_GET['email'],
+               'Phone'=>$_GET['phone'],
+               'Note'=>$_GET['comment'],
+        )
+   );
+       return view("checkout",['total'=>$this->gettotal()]);
+    }
+    return $this->loginview();
+  }
+  // lay ma cac san pham trong gio hang
+  public function getProducts_string()
+  {  $string="";
+    if(isset($_COOKIE['id']))
+    {   
         $products = DB::table('giay')
         ->join('giohang', 'giay.MaGiay', '=', 'giohang.MaSanPham')->where('MaTaiKhoan',$_COOKIE['id'])
         ->select('giay.*', 'giohang.SoLuong')
         ->get();
         foreach($products as $row)
         {
-            $sum2=($row->SoLuong*$row->GiaBan);
-            $sum+=$sum2;
+            $tmp=strval($row->MaGiay);
+           $string.= $tmp.",";
         }
-        return $sum;
-    }
-        else
-        return 0;
-    }
-    public function checkoutview()
+       } return $string;
+  }
+  // lay tong so luong cac san pham trong gio hang
+  public function get_total_amount()
+  {   $amount=0;
+    if(isset($_COOKIE['id']))
+    {   
+        $products = DB::table('giay')
+        ->join('giohang', 'giay.MaGiay', '=', 'giohang.MaSanPham')->where('MaTaiKhoan',$_COOKIE['id'])
+        ->select('giay.*', 'giohang.SoLuong')
+        ->get();
+        foreach($products as $row)
+        {
+          $amount+=$row->SoLuong;
+        }
+       } return $amount;
+  }
+   //lay tong tien trong gio hang
+   public  function gettotal()
+   {    
+     $sum=0;
+    if(isset($_COOKIE['id']))
+    {   
+       $products = DB::table('giay')
+       ->join('giohang', 'giay.MaGiay', '=', 'giohang.MaSanPham')->where('MaTaiKhoan',$_COOKIE['id'])
+       ->select('giay.*', 'giohang.SoLuong')
+       ->get();
+       foreach($products as $row)
+       {
+           $sum2=($row->SoLuong*$row->GiaBan);
+           $sum+=$sum2;
+       }
+      } return $sum;
+   }
+   // Xoa 1 san pham trong gio hang
+   public function delProduct($id)
+   {
+    DB::table('giohang')->where('MaSanPham',$id)->delete();
+   }
+
+   public function get_historyBill()
+   {
+    if(isset($_COOKIE['id']))
     {
-        return view("checkout");
+      $his=DB::table('hoadon')->join('ct_hoadon', 'hoadon.MaHD', '=', 'ct_hoadon.MaHD')->where('MaTaiKhoan',$_COOKIE['id'])
+     ->select('hoadon.*', 'ct_hoadon.MaGiay','ct_hoadon.SoLuong','ct_hoadon.DonGia','ct_hoadon.HoTen')
+     ->get();
+    } 
+    else{
+        $his=DB::table('hoadon')->join('ct_hoadon', 'hoadon.MaHD', '=', 'ct_hoadon.MaHD')->where('MaTaiKhoan',0)
+        ->select('hoadon.*', 'ct_hoadon.MaGiay','ct_hoadon.SoLuong','ct_hoadon.DonGia','ct_hoadon.HoTen')
+        ->get();
     }
+      return $his;
+   }
 }

@@ -1,6 +1,7 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="">
@@ -98,7 +99,7 @@
         <!-- Header Area End -->
 
         <div class="cart-table-area section-padding-100">
-            <div class="container-fluid">
+            <div class="container-fluid parent">
                 <div class="row">
                     <div class="col-12 col-lg-8">
                         <div class="cart-title mt-50">
@@ -115,8 +116,8 @@
                                         <th>Quantity</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                
+                                <tbody id="tbody">
+                                 <?php $count=1;?>
                                     @foreach($products as $row)
                                     <tr>
                                         <td class="cart_product_img">
@@ -133,29 +134,38 @@
                                             <div class="qty-btn d-flex">
                                                 <p>Qty</p>
                                                 <div class="quantity">
-                                                    <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                                 <!-- <span class="qty-minus" onclick="var effect = do cument.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
                                                     <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="{{$row->SoLuong}}">
-                                                    <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>      
+                                                  <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i>-->
+                                              
+                                                <input type="number"  min="1" value="{{$row->SoLuong}}" id="upCart<?php echo $count;?>" >
+                                                <input type="hidden"  value="{{$row->MaGiay}}" id="proid<?php echo $count;?>" >
+                                                <input type="hidden"  value="{{$row->GiaBan}}" id="price<?php echo $count;?>" >
+                                                <input type="hidden"  value="{{$row->SoLuong}}" id="old_amount<?php echo $count;?>" >  
                                                 </div>   
-                                            </div>
-                                            
+                                                <a href="javascript:delProduct({{$row->MaGiay}});"  style="font-size:20px;margin-left:10px;"><i class="fa fa-trash" style="color:red;"></i></a>                                           
+                                            </div> 
                                         </td>
                                     </tr>
+                                     <?php $count++;?>                                     
                                    @endforeach
-                                   <a href="del" style="color:red;">Xoa toan bo</a>
+                                                                                        
+                                   <div class="d-flex main justify-content-between" >
+                                      <a href="del" style="color:red;">Xóa toàn bộ</a>  
+                                      <a href="javascript:show_hide(0);"><i class="fa fa-history"></i> Lịch sử thanh toán</a>                 
+                                   </div>
+                                 
                                 </tbody>
                             </table>
                         </div>
-                       
                     </div>
                     <div class="col-12 col-lg-4">
                         <div class="cart-summary">
                             <h5>Cart Total</h5>
-                            <ul class="summary-table">
-                                
-                                <li><span>subtotal:</span> <span>${{$total}}</span></li>
+                            <ul class="summary-table">               
+                                <li><span>subtotal:</span> <span >${{$total}}</span></li>
                                 <li><span>delivery:</span> <span>Free</span></li>
-                                <li><span>total:</span> <span>${{$total}}</span></li>
+                                <li><span>total:</span> <span id="total">${{$total}}</span></li>
                             </ul>
                             <div class="cart-btn mt-100">
                                 <a href="tt" class="btn amado-btn w-100">Checkout</a>
@@ -163,8 +173,43 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+                <div id="child" style="overflow-y: auto;">
+                <div><button id="cancel" onclick="show_hide(1);"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg></button></div>
+                <div style="text-align:center;">Lịch sử thanh toán</div>
+
+                <div class="cart-table clearfix">
+                <table class="table table-responsive"  style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        <th>Mã các sản phẩm</th>
+                        <th>Tên người nhận</th>
+                        <th>Tổng số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Ngày Lập</th>
+                        <th>Nơi nhận</th>
+                        <th>Tình trạng</th>
+                     </tr>
+                </thead>
+                     <tbody>
+                    @foreach($bill as $row)
+                    <tr class="tr">
+                        <td>{{$row->MaGiay}}</td>
+                        <td>{{$row->HoTen}}</td>
+                        <td>{{$row->SoLuong}}</td>
+                        <td>${{$row->DonGia}}</td>
+                        <td>{{$row->NgayLapHD}}</td>
+                        <td>{{$row->NoiChuyen}}</td>
+                        <td>{{$row->TinhTrang}}</td>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>     
+                </div>
+            </div> 
+        </div> 
     </div>
     <!-- ##### Main Content Wrapper End ##### -->
 
@@ -244,6 +289,32 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             </div>
         </div>
     </footer>
+<style>
+#child{
+    z-index: 1;
+    position:absolute;
+    top: 10%;
+    left: 25%;
+    width: 400px;
+    height: 500px;
+    box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color:white;
+    border:1px solid;
+    overflow-y: auto;
+    display:none;
+}
+#cancel{
+   float:right;
+   width: 20px;
+   height: 20px;
+   border:none;
+}
+.tr td{
+    font-size:12px;
+}
+
+
+</style>
     <!-- ##### Footer Area End ##### -->
 
     <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
@@ -257,6 +328,73 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <!-- Active js -->
     <script src="js/active.js"></script>
 
+<script>
+    
+    $(document).ready(function(){
+  <?php for($i=1;$i<$count;$i++){?>      
+        $('#upCart<?php echo $i;?>').on('change keypress',function(){
+           var newqty=$('#upCart<?php echo $i;?>').val();
+           var proid=$('#proid<?php echo $i;?>').val();
+           var price=$('#price<?php echo $i;?>').val();
+           var old_amount=$('#old_amount<?php echo $i;?>').val();
+           var js_total=<?php echo $total; ?>;
+           var data={
+            'SoLuong':newqty,
+            'MaSanPham':proid,
+           }
+           if(newqty<=0){
+            alert('Vui lòng nhập số');
+           }
+          else{        
+            js_total-=((old_amount*price));
+            js_total+=((newqty*price));
+            document.getElementById("total").innerHTML = '$'+js_total; 
+            $.ajax({
+            type:'get',
+            dataType:'html',
+            url:'update'+proid,
+            data:data,
+            success:function(response){
+                console.log(response);
+               // alert('Cập nhật Sản Phẩm Id: '+proid +'\nSố Lượng: '+newqty);
+            }
+            });  
+          }
+        });     
+        <?php }?>
+    });
+
+  function delProduct(id)
+  {
+    if(confirm('Xác nhận xóa sản phẩm này?')==true){
+        $.ajax({
+        type:'get',
+        dataType:"html",
+        url:'delProduct'+id,
+        data:id,
+        success:function(response){
+                console.log(response);
+               $('#tbody').load(document.URL+' #tbody');
+            }
+    });
+    }
+  }
+  function show_hide(n)
+  {
+    if(n==1)
+    document.getElementById("child").style.display = "none";
+    else
+    document.getElementById("child").style.display = "block";
+  }
+//   var cursor=document.getElementById("child");
+//   document.addEventListener("mousemove",function(e)
+//   {
+//     var x=e.clientX;
+//     var y=e.clientY;
+//     cursor.style.top=y+"px";
+//     cursor.style.left=x+"px";
+//   })
+</script> 
 </body>
 
 </html>

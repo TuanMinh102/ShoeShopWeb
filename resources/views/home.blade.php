@@ -110,7 +110,7 @@
                         <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
-                            <p>From ${{$row->GiaBan}}</p>
+                            <p>Price ${{$row->GiaBan}}</p>
                             <h4>Modern {{$row->TenHang}}</h4>
                         </div>
                     </a>

@@ -30,3 +30,8 @@ Route::get('/gh',[HomeController::class,"getcart"]);
 Route::get('/gh{id}',[HomeController::class,"addcart"]);
 Route::get('/del',[HomeController::class,"xoatoanbo"]);
 Route::get('/tt',[HomeController::class,"checkoutview"]);
+Route::get('/update{id}',[HomeController::class,"capnhatgh"]);
+Route::get('/ttoan',[HomeController::class,"thanhtoan"]);
+Route::get('/delProduct{id}',[HomeController::class,"delProduct"]);
+
+
