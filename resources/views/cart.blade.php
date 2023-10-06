@@ -173,16 +173,16 @@
                         </div>
                     </div>
                 </div>
-                <div id="child" style="overflow-y: auto;">
+                <div id="child" >
                 <div><button id="cancel" onclick="show_hide(1);"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg></button></div>
                 <div style="text-align:center;">Lịch sử thanh toán</div>
 
                 <div class="cart-table clearfix">
-                <table class="table table-responsive"  style="overflow-x: auto;">
-                <thead>
-                    <tr>
+                <table class="table table-responsive">
+                <thead style="background-color:#f8f9fa;">
+                    <tr style="height: 50px;width:400px;">
                         <th>Mã các sản phẩm</th>
                         <th>Tên người nhận</th>
                         <th>Tổng số lượng</th>
@@ -194,7 +194,7 @@
                 </thead>
                      <tbody>
                     @foreach($bill as $row)
-                    <tr class="tr">
+                    <tr style="height: 50px;width:400px;" class="tr">
                         <td>{{$row->MaGiay}}</td>
                         <td>{{$row->HoTen}}</td>
                         <td>{{$row->SoLuong}}</td>
@@ -294,13 +294,14 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     z-index: 1;
     position:absolute;
     top: 10%;
-    left: 25%;
-    width: 400px;
-    height: 500px;
+    left: 15%;
+    width: 700px;
+    height: 300px;
     box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     background-color:white;
     border:1px solid;
     overflow-y: auto;
+    overflow-x:auto;
     display:none;
 }
 #cancel{
@@ -335,9 +336,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         $('#upCart<?php echo $i;?>').on('change keypress',function(){
            var newqty=$('#upCart<?php echo $i;?>').val();
            var proid=$('#proid<?php echo $i;?>').val();
-           var price=$('#price<?php echo $i;?>').val();
-           var old_amount=$('#old_amount<?php echo $i;?>').val();
-           var js_total=<?php echo $total; ?>;
            var data={
             'SoLuong':newqty,
             'MaSanPham':proid,
@@ -345,10 +343,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
            if(newqty<=0){
             alert('Vui lòng nhập số');
            }
-          else{        
-            js_total-=((old_amount*price));
-            js_total+=((newqty*price));
-            document.getElementById("total").innerHTML = '$'+js_total; 
+          else{               
             $.ajax({
             type:'get',
             dataType:'html',
@@ -356,7 +351,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             data:data,
             success:function(response){
                 console.log(response);
-               // alert('Cập nhật Sản Phẩm Id: '+proid +'\nSố Lượng: '+newqty);
+               $('.summary-table').load(document.URL+' .summary-table');
             }
             });  
           }
@@ -375,6 +370,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         success:function(response){
                 console.log(response);
                $('#tbody').load(document.URL+' #tbody');
+               $('.summary-table').load(document.URL+' .summary-table');
             }
     });
     }
@@ -384,8 +380,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     if(n==1)
     document.getElementById("child").style.display = "none";
     else
-    document.getElementById("child").style.display = "block";
+    document.getElementById("child").style.display = "inline-block";
   }
+
 //   var cursor=document.getElementById("child");
 //   document.addEventListener("mousemove",function(e)
 //   {

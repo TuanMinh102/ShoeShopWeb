@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\AdminController;
+
 
 
 /*
@@ -15,23 +21,30 @@ use App\Http\Controllers\HomeController;
 |
 */
 Route::get('/home',[HomeController::class,"homeview"]);
-Route::get('/login',[HomeController::class,"loginview"]);
-Route::get('/login{id}',[HomeController::class,"logout"]);
-Route::get('/dn',[HomeController::class,"dangnhap"]);
-Route::get('/dk',[HomeController::class,"dangky"]);
-Route::get('/dt',[HomeController::class,"data"]);
-Route::get('/ct',[HomeController::class,"chitiet"]);
-Route::get('/shop',[HomeController::class,"Shopview"]);
-Route::get('/cats{id}',[HomeController::class,"Catogories"]);
-Route::get('/brands{id}',[HomeController::class,"Brands"]);
-Route::get('/ct{id}',[HomeController::class,"details"]);
-Route::get('/tk',[HomeController::class,"timkiem"]);
-Route::get('/gh',[HomeController::class,"getcart"]);
-Route::get('/gh{id}',[HomeController::class,"addcart"]);
-Route::get('/del',[HomeController::class,"xoatoanbo"]);
-Route::get('/tt',[HomeController::class,"checkoutview"]);
-Route::get('/update{id}',[HomeController::class,"capnhatgh"]);
-Route::get('/ttoan',[HomeController::class,"thanhtoan"]);
-Route::get('/delProduct{id}',[HomeController::class,"delProduct"]);
+
+Route::get('/login',[UserController::class,"loginview"]);
+Route::get('/login{id}',[UserController::class,"logout"]);
+Route::get('/dn',[UserController::class,"dangnhap"]);
+Route::get('/dk',[UserController::class,"dangky"]);
+
+Route::get('/shop',[ProductController::class,"Shopview"]);
+Route::get('/ct',[ProductController::class,"chitiet"]);
+Route::get('/cats{id}',[ProductController::class,"Catogories"]);
+Route::get('/brands{id}',[ProductController::class,"Brands"]);
+Route::get('/ct{id}',[ProductController::class,"details"]);
+Route::get('/tk',[ProductController::class,"timkiem"]);
+
+Route::get('/gh',[CartController::class,"getcart"]);
+Route::get('/gh{id}',[CartController::class,"addcart"]);
+Route::get('/del',[CartController::class,"xoatoanbo"]);
+Route::get('/update{id}',[CartController::class,"capnhatgh"]);
+Route::get('/delProduct{id}',[CartController::class,"delProduct"]);
+
+Route::get('/tt',[CheckoutController::class,"checkoutview"]);
+Route::get('/ttoan',[CheckoutController::class,"thanhtoan"]);
+// Route::get('/mail',[CheckoutController::class,"SendMail"]);
+
+Route::get('/admin',[AdminController::class,"adminview"]);
+
 
 
