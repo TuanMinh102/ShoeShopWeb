@@ -26,6 +26,7 @@ Route::get('/login',[UserController::class,"loginview"]);
 Route::get('/login{id}',[UserController::class,"logout"]);
 Route::get('/dn',[UserController::class,"dangnhap"]);
 Route::get('/dk',[UserController::class,"dangky"]);
+Route::get('/otp',[UserController::class,"SendOTP"]);
 
 Route::get('/shop',[ProductController::class,"Shopview"]);
 Route::get('/ct',[ProductController::class,"chitiet"]);
@@ -42,7 +43,6 @@ Route::get('/delProduct{id}',[CartController::class,"delProduct"]);
 
 Route::get('/tt',[CheckoutController::class,"checkoutview"]);
 Route::get('/ttoan',[CheckoutController::class,"thanhtoan"]);
-// Route::get('/mail',[CheckoutController::class,"SendMail"]);
 
 Route::get('/admin',[AdminController::class,"adminview"]);
 

@@ -351,7 +351,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             data:data,
             success:function(response){
                 console.log(response);
-               $('.summary-table').load(document.URL+' .summary-table');
+               $('.summary-table').reload(document.URL+' .summary-table');
             }
             });  
           }
@@ -369,8 +369,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         data:id,
         success:function(response){
                 console.log(response);
-               $('#tbody').load(document.URL+' #tbody');
-               $('.summary-table').load(document.URL+' .summary-table');
+               $('#tbody').reload(document.URL+' #tbody');
+               $('.summary-table').reload(document.URL+' .summary-table');
             }
     });
     }

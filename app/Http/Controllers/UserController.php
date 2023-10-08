@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -88,5 +89,13 @@ class UserController extends Controller
         );
         return view("login",['SignUpError'=>"Đăng Ký Thành Công",'loginError'=>""]);
      }
+     }
+     public function SendOTP(Request $request)
+     {  
+        $random_otp=rand(9999,99999); 
+        $mail=$request->email;
+        Mail::send('otpform',compact('random_otp'),function($email) use ($mail){
+        $email->to($mail);
+      });
      }
 }

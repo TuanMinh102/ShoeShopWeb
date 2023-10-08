@@ -96,59 +96,73 @@
             </div>
         </header>
         <!-- Header Area End -->
-
-        <div class="cart-table-area section-padding-100">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 col-lg-8">
                     @empty($ck)
-                        <div class="checkout_details_area mt-50 clearfix">
-                            <div class="cart-title">
-                                <h2>Login</h2>
-                            </div>
-                         
-                            <form action="dn" method="get">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <input type="text" class="form-control" id="" name="user_name" value="" placeholder="Username" required>
+                    <div class="form-container">
+                         <div id="loginform" >
+                            <form action="dn" method="get" >
+                                <h2 >Login</h2> 
+                                    <div>
+                                        <b>Tài khoản <a style="color:red;">*</a></b>                                                                  
+                                       <input type="text"  id="" name="user_name" value="" placeholder="Username" required>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <input type="password" class="form-control" id="" name ="pass_word" value="" placeholder="Password" required>
-                                    </div>
-                                    </div>
-                                    <input type="submit" class="btn btn-success" style="width: 100px;"
-										id="login" value="Login" name="" >
-                                        <h4 style="color:red;">{{$loginError}}</h4>
-                                </div>
+                                    <div>
+                                       <b>Mật khẩu <a style="color:red;">*</a></b>      
+                                        <input type="password"  id="" name ="pass_word" value="" placeholder="Password" required>
+                                    </div>  
+                                    <i>Chưa có tài khoản?<a href="javascript:show_hide(1);" style="color:blue;"> Đăng ký</a></i><br>
+                                    <i>Quên mật khẩu?<a href="javascript:show_hide(2);" style="color:blue;"> Khôi phục</a></i><br>
+                                    
+                                    <input type="submit" class="btn btn-success" style="width: 100px; margin-left:35%;" id="login" value="Login" name="" >		
+                                <h4 style="color:red;">{{$loginError}}</h4>
                             </form>
-                            <br><br><br>
-                            <div class="cart-title">
-                                <h2>Sign up</h2>
-                            </div>
-
-                            <form action="dk" method="get">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <input type="text" class="form-control" id="" name="user_name" value="" placeholder="Username" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <input type="password" class="form-control" id="" name ="pass_word" value="" placeholder="Password" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <input type="password" class="form-control" id="" name ="confirm_pass" value="" placeholder="Confirm Password" required>
-                                    </div>
-                                    </div>
-                                    <input type="submit" class="btn btn-success" style="width: 100px;"
-										id="login" value="Sign up" name="" >
-                                        <h4 style="color:red;">{{$SignUpError}}</h4>
+                         </div>
+                         <div id="signUpform" >
+                            <form action="dk" method="get" >
+                                <h2>Sign up</h2> 
+                                <div>                             
+                                <b>Tài khoản<a style="color:red;">*</a></b>
+                                <input type="text"  id="" name="user_name" value="" placeholder="Username" required></div>
+                                <div>
+                                <b>Mật khẩu <a style="color:red;">*</a></b>
+                                <input type="password"  id="" name ="pass_word" value="" placeholder="Password" required></div>
+                               <div>
+                                <b>Xác nhận mật khẩu <a style="color:red;">*</a></b>
+                                <input type="password"  id="" name ="confirm_pass" value="" placeholder="Confirm Password" required>
                                 </div>
+                                <br>
+                                <input type="submit" class="btn btn-success" style="width: 100px; margin-left:35% ;" id="logup" value="Sign up" name="" >										
+                                <h4 style="color:red;">{{$SignUpError}}</h4>
                             </form>
-                           
+                        </div> 
+                        <div id="recoverPassform" > 
+                            <form action="#" method="get">
+                             <h2>Khôi phục mật khẩu</h2>
+                             <div>
+                                <b>Email<a style="color:red;">*</a></b><br>
+                                <input type="email" id="email_otp" name ="email" value="" placeholder="Mã OTP sẽ gửi về địa chỉ email tại đây!" required>
+                            </div>
+                            <br>                  
+                            <button class="btn btn-success" style="margin-left:35%;"  id="next">Tiep tuc</button>                              
+                            </form>                     
                         </div>
-                      @endempty
+                        <div id="OTPform" > 
+                            <form action="#" method="get">
+                             <h2>Khôi phục mật khẩu</h2>
+                             <div>
+                                <b>Email<a style="color:red;">*</a></b><br>
+                                <input type="email" id="email_otp" name ="email" value="" placeholder="Mã OTP sẽ gửi về địa chỉ email tại đây!" required>
+                            </div>
+                            <br>                  
+                            <button class="btn btn-success" style="margin-left:35%;"  id="next">Tiep tuc</button>                              
+                            </form>                     
+                        </div>
+                    </div> 
+
+                    @endempty
 
                       @isset($ck)
                       @foreach($info as $row)
+                      <div>
                       <h3>Thông tin tài khoản</h3>
                       <p><b>Tài Khoản:</b> {{$row->TaiKhoan}}</p>
                       <p><b>Email:</b> {{$row->Email}}</p>
@@ -156,16 +170,9 @@
                       <p><b>Địa Chỉ:</b> {{$row->DiaChi}}</p>
                       <p><b>Họ Tên:</b> {{$row->HoTen}}</p>
                       <a href="login0" style="color:red;">Đăng Xuất</a>
+                      </div>
                       @endforeach
                       @endisset
-                    </div>
-               
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- ##### Main Content Wrapper End ##### -->
 
     <!-- ##### Newsletter Area Start ##### -->
@@ -243,6 +250,44 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             </div>
         </div>
     </footer>
+    <style>
+    .form-container{
+        margin-left: 20%;
+        margin-top: 10%;
+        width: 25%;
+        height: 400px;
+        box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border:1px solid;
+        overflow-y: auto;
+    }
+    i{
+        margin-left:25px;
+    }
+   
+    #signUpform{
+        display: none;
+    }
+    #recoverPassform{
+        display: none;
+    }
+   #OTPform{
+    display: none;
+   }
+    h2{
+        text-align:center;
+    }
+   form>div
+   {
+    margin-top:15px;
+     margin-left:25px;
+   }
+    input{
+        height:35px;
+        width: 85%;
+        border: 1px solid #ccc;
+        font-size:15px;
+    }
+</style>
     <!-- ##### Footer Area End ##### -->
 
     <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
@@ -255,13 +300,47 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="js/plugins.js"></script>
     <!-- Active js -->
     <script src="js/active.js"></script>
+    <script>
+    function show_hide(n)
+    {
+        if(n==0)
+        {
+            document.getElementById("loginform").style.display="block";
+            document.getElementById("signUpform").style.display="none";
+            document.getElementById("recoverPassform").style.display="none";
+        }
+        else if(n==1)
+        {
+            document.getElementById("loginform").style.display="none";
+            document.getElementById("signUpform").style.display="block";
+            document.getElementById("recoverPassform").style.display="none";
+        }
+        else
+        {
+            document.getElementById("loginform").style.display="none";
+            document.getElementById("signUpform").style.display="none";
+            document.getElementById("recoverPassform").style.display="block";
+        }
+    }
+    $("#next").on("click",function(){
+    var mail=$('#email_otp').val();
+      var data={
+      'email': mail,
+      }
+      $.ajax({
+            type:'get',
+            dataType:'html',
+            url:'otp',
+            data:data,
+            success:function(response){
+                console.log(response);
+                document.getElementById("recoverPassform").style.display="none";
+                document.getElementById("OTPform").style.display="block";
+              $(".form-container").reload(document.URL+" .form-container");
+            }
+            });  
+          });
+</script>
 
 </body>
-
 </html>
-                        <script>
-                        function logout()
-                            {
-                                setcookie('id', null, time()-3600); 
-                            }
-                            </script>
