@@ -92,10 +92,15 @@ class UserController extends Controller
      }
      public function SendOTP(Request $request)
      {  
-        $random_otp=rand(9999,99999); 
+        $random_otp=$request->random_otp; 
         $mail=$request->email;
         Mail::send('otpform',compact('random_otp'),function($email) use ($mail){
         $email->to($mail);
       });
+     }
+
+     public function Laylaimk(Request $request)
+     {
+        $user= DB::table('taikhoan')->where('Email',$request->gmail)->update(['MatKhau'=>$request->newpassword]);
      }
 }

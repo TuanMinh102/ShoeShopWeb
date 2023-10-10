@@ -98,7 +98,7 @@
         <!-- Header Area End -->
                     @empty($ck)
                     <div class="form-container">
-                         <div id="loginform" >
+                         <div id="loginform">
                             <form action="dn" method="get" >
                                 <h2 >Login</h2> 
                                     <div>
@@ -135,26 +135,47 @@
                             </form>
                         </div> 
                         <div id="recoverPassform" > 
-                            <form action="#" method="get">
+                            <form action="#" method="get" >
                              <h2>Khôi phục mật khẩu</h2>
                              <div>
                                 <b>Email<a style="color:red;">*</a></b><br>
                                 <input type="email" id="email_otp" name ="email" value="" placeholder="Mã OTP sẽ gửi về địa chỉ email tại đây!" required>
                             </div>
-                            <br>                  
-                            <button class="btn btn-success" style="margin-left:35%;"  id="next">Tiep tuc</button>                              
-                            </form>                     
+                            <br>                                           
+                            </form>
+                            <button class="btn btn-success" style="margin-left:35%;" onclick="next();"  id="next">Tiep tuc</button>                     
                         </div>
                         <div id="OTPform" > 
                             <form action="#" method="get">
-                             <h2>Khôi phục mật khẩu</h2>
-                             <div>
-                                <b>Email<a style="color:red;">*</a></b><br>
-                                <input type="email" id="email_otp" name ="email" value="" placeholder="Mã OTP sẽ gửi về địa chỉ email tại đây!" required>
+                             <h2>Xác nhận mã OTP</h2>
+                             <p>Mã sẽ được gửi về địa chỉ Email bạn vừa nhập</p>
+                                    <p id ="email_to"></p>
+                             <div id="inputs" class="inputs"> 
+                                 <input class="input-otp" id="i1" type="text" inputmode="numeric" maxlength="1" require/>   
+                                 <input class="input-otp" id="i2" type="text" inputmode="numeric" maxlength="1" require/>          
+                                 <input class="input-otp" id="i3" type="text" inputmode="numeric" maxlength="1" require/>
+                                 <input class="input-otp" id="i4" type="text" inputmode="numeric" maxlength="1" require/>
+                                 <input class="input-otp" id="i5" type="text" inputmode="numeric" maxlength="1" require/>
+                            </div><br>                        
+                            </form>
+                            <button onclick="checkcode();" class="btn btn-success" style="margin-left:35%;"  id="confirm_code">Xác nhận</button>
+                            <br>   
+                            <h4 style="color:red;text-align:center;margin-top:15px;" id="error-otp"></h4>
+                        </div>
+                        <div id="newPassform"> 
+                            <form action="#" method="get">
+                             <h2>Xác nhận mật khẩu mới</h2>
+                             <p>Mật khẩu mới gồm ...</p>
+                             <div> 
+                             <b>Mật khẩu mới<a style="color:red;">*</a></b><br>
+                                 <input  id="new_pass" type="password" placeholder="Mật khẩu mới"  require/>             
                             </div>
-                            <br>                  
-                            <button class="btn btn-success" style="margin-left:35%;"  id="next">Tiep tuc</button>                              
-                            </form>                     
+                            <div>
+                            <b>Nhập lại mật khẩu mới<a style="color:red;">*</a></b><br>
+                            <input id="confirm_pass" type="password"  placeholder="Nhập lại mật khẩu mới" require/>
+                            </div> <br>                     
+                            </form>
+                            <button onclick="checkpass();" class="btn btn-success" style="margin-left:35%;"  id="confirm_newPass">Xác nhận</button>   
                         </div>
                     </div> 
 
@@ -264,15 +285,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         margin-left:25px;
     }
    
-    #signUpform{
+    #signUpform, #recoverPassform,#OTPform,#newPassform{
         display: none;
     }
-    #recoverPassform{
-        display: none;
-    }
-   #OTPform{
-    display: none;
-   }
     h2{
         text-align:center;
     }
@@ -281,12 +296,29 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     margin-top:15px;
      margin-left:25px;
    }
+   #OTPform p{
+    text-align:center;
+   }
     input{
         height:35px;
         width: 85%;
         border: 1px solid #ccc;
         font-size:15px;
     }
+  .inputs{
+    display: flex; 
+    justify-content: center;  
+    justify-content: space-around;
+  }  
+.input-otp{
+   width: 40px;
+   border:none;
+   border-bottom: 3px solid grey;
+   text-align: center; 
+}
+.input-otp:focus{
+  outline:none;
+}
 </style>
     <!-- ##### Footer Area End ##### -->
 
@@ -300,47 +332,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="js/plugins.js"></script>
     <!-- Active js -->
     <script src="js/active.js"></script>
-    <script>
-    function show_hide(n)
-    {
-        if(n==0)
-        {
-            document.getElementById("loginform").style.display="block";
-            document.getElementById("signUpform").style.display="none";
-            document.getElementById("recoverPassform").style.display="none";
-        }
-        else if(n==1)
-        {
-            document.getElementById("loginform").style.display="none";
-            document.getElementById("signUpform").style.display="block";
-            document.getElementById("recoverPassform").style.display="none";
-        }
-        else
-        {
-            document.getElementById("loginform").style.display="none";
-            document.getElementById("signUpform").style.display="none";
-            document.getElementById("recoverPassform").style.display="block";
-        }
-    }
-    $("#next").on("click",function(){
-    var mail=$('#email_otp').val();
-      var data={
-      'email': mail,
-      }
-      $.ajax({
-            type:'get',
-            dataType:'html',
-            url:'otp',
-            data:data,
-            success:function(response){
-                console.log(response);
-                document.getElementById("recoverPassform").style.display="none";
-                document.getElementById("OTPform").style.display="block";
-              $(".form-container").reload(document.URL+" .form-container");
-            }
-            });  
-          });
-</script>
+    <script src="js/login.js"></script>
 
 </body>
 </html>

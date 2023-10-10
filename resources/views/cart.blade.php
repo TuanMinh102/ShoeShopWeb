@@ -330,7 +330,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="js/active.js"></script>
 
 <script>
-    
+    // Tăng giảm số lượng sản phẩm và cập nhật
     $(document).ready(function(){
   <?php for($i=1;$i<$count;$i++){?>      
         $('#upCart<?php echo $i;?>').on('change keypress',function(){
@@ -351,14 +351,14 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             data:data,
             success:function(response){
                 console.log(response);
-               $('.summary-table').reload(document.URL+' .summary-table');
+               $('.summary-table').load(document.URL+' .summary-table');
             }
             });  
           }
         });     
         <?php }?>
     });
-
+    // Xóa sản phẩm bằng ajax
   function delProduct(id)
   {
     if(confirm('Xác nhận xóa sản phẩm này?')==true){
@@ -369,12 +369,13 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         data:id,
         success:function(response){
                 console.log(response);
-               $('#tbody').reload(document.URL+' #tbody');
-               $('.summary-table').reload(document.URL+' .summary-table');
+               $('#tbody').load(document.URL+' #tbody');
+               $('.summary-table').load(document.URL+' .summary-table');
             }
     });
     }
   }
+  // Ẩn hiện div lịch sử mua hàng
   function show_hide(n)
   {
     if(n==1)

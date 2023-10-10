@@ -27,6 +27,7 @@ Route::get('/login{id}',[UserController::class,"logout"]);
 Route::get('/dn',[UserController::class,"dangnhap"]);
 Route::get('/dk',[UserController::class,"dangky"]);
 Route::get('/otp',[UserController::class,"SendOTP"]);
+Route::get('/recoverpass',[UserController::class,"Laylaimk"]);
 
 Route::get('/shop',[ProductController::class,"Shopview"]);
 Route::get('/ct',[ProductController::class,"chitiet"]);
