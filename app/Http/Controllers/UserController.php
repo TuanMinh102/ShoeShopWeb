@@ -55,29 +55,27 @@ class UserController extends Controller
           return view("login",['loginError'=>"Sai mật khẩu hoặc tài khoản",'SignUpError'=>""]);
      }
      // Dang Ky
-     public function dangky()
+     public function dangky(Request $request)
      {
-         $username= $_GET['user_name'];
-         $password=$_GET['pass_word'];
-         $confirm=$_GET['confirm_pass'];
          $tk = DB::table('taikhoan')->select('*');
          $tk=$tk->get();
          foreach($tk as $row){
-         if($username==$row->TaiKhoan)
+         if($request->tendangnhap==$row->TaiKhoan)
          {
-             return view("login",['SignUpError'=>"Tên Đăng Nhập Tồn Tại",'loginError'=>""]);
-         }}
-        if($password!=$confirm)
+        return response()->json(['SignUpError'=>"Tên Đăng Nhập Tồn Tại",'flag'=>'false']);
+         }
+        }
+        if($request->matkhau!=$request->xacnhanmatkhau)
         {
-         return view("login",['SignUpError'=>"Mật Khẩu Không Trùng khớp",'loginError'=>""]);
+         return response()->json(['SignUpError'=>"Mật Khẩu Không Trùng khớp",'flag'=>'false']);
         }
         else
         {
          DB::table('taikhoan')->insert(
              array(
                      'MaTaiKhoan' => (DB::table('taikhoan')->max('MaTaiKhoan'))+1,
-                    'TaiKhoan'     =>   $username, 
-                    'MatKhau'   =>   $password,
+                    'TaiKhoan'     =>   $request->tendangnhap, 
+                    'MatKhau'   =>   $request->matkhau,
                     'Email'=>'',
                     'Phone'=>'',
                     'DiaChi'=>'',
@@ -87,7 +85,7 @@ class UserController extends Controller
                     'TrangThai'=>''
              )
         );
-        return view("login",['SignUpError'=>"Đăng Ký Thành Công",'loginError'=>""]);
+        return response()->json(['SignUpError'=>"Đăng Ký Thành Công",'flag'=>"true"]);
      }
      }
      public function SendOTP(Request $request)

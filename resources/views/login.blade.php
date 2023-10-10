@@ -110,29 +110,29 @@
                                         <input type="password"  id="" name ="pass_word" value="" placeholder="Password" required>
                                     </div>  
                                     <i>Chưa có tài khoản?<a href="javascript:show_hide(1);" style="color:blue;"> Đăng ký</a></i><br>
-                                    <i>Quên mật khẩu?<a href="javascript:show_hide(2);" style="color:blue;"> Khôi phục</a></i><br>
-                                    
+                                    <i>Quên mật khẩu?<a href="javascript:show_hide(2);" style="color:blue;"> Khôi phục</a></i><br>                       
                                     <input type="submit" class="btn btn-success" style="width: 100px; margin-left:35%;" id="login" value="Login" name="" >		
                                 <h4 style="color:red;">{{$loginError}}</h4>
                             </form>
                          </div>
                          <div id="signUpform" >
-                            <form action="dk" method="get" >
+                            <form>
                                 <h2>Sign up</h2> 
                                 <div>                             
                                 <b>Tài khoản<a style="color:red;">*</a></b>
-                                <input type="text"  id="" name="user_name" value="" placeholder="Username" required></div>
+                                <input type="text"  id="user_name" name="user_name" value="" placeholder="Username" required></div>
                                 <div>
                                 <b>Mật khẩu <a style="color:red;">*</a></b>
-                                <input type="password"  id="" name ="pass_word" value="" placeholder="Password" required></div>
+                                <input type="password"  id="pass_word" name ="pass_word" value="" placeholder="Password" required></div>
                                <div>
                                 <b>Xác nhận mật khẩu <a style="color:red;">*</a></b>
-                                <input type="password"  id="" name ="confirm_pass" value="" placeholder="Confirm Password" required>
+                                <input type="password"  id="confirm_pass-signup" name ="confirm_pass" value="" placeholder="Confirm Password" required>
                                 </div>
                                 <br>
-                                <input type="submit" class="btn btn-success" style="width: 100px; margin-left:35% ;" id="logup" value="Sign up" name="" >										
-                                <h4 style="color:red;">{{$SignUpError}}</h4>
-                            </form>
+                                </form>
+                                <button class="btn btn-success" style="margin-left:35%;" onclick="signUp();"  id="logup">Đăng ký</button>  
+                                <!-- <input type="submit" class="btn btn-success" style="width: 100px; margin-left:35% ;" id="logup" value="Sign up" name="" > -->		
+                                <h4 style="color:red;text-align:center;" id="error-signUp"></h4>
                         </div> 
                         <div id="recoverPassform" > 
                             <form action="#" method="get" >
@@ -143,12 +143,13 @@
                             </div>
                             <br>                                           
                             </form>
-                            <button class="btn btn-success" style="margin-left:35%;" onclick="next();"  id="next">Tiep tuc</button>                     
+                            <button class="btn btn-secondary" style="margin-left:35%;" onclick="next();"  id="next">Tiếp tục</button>                     
                         </div>
                         <div id="OTPform" > 
                             <form action="#" method="get">
                              <h2>Xác nhận mã OTP</h2>
-                             <p>Mã sẽ được gửi về địa chỉ Email bạn vừa nhập</p>
+                             <p>Mã chỉ có tác dụng trong:</p>
+                             <p id="countdown" style="font-size:33px;"></p>
                                     <p id ="email_to"></p>
                              <div id="inputs" class="inputs"> 
                                  <input class="input-otp" id="i1" type="text" inputmode="numeric" maxlength="1" require/>   
@@ -158,9 +159,10 @@
                                  <input class="input-otp" id="i5" type="text" inputmode="numeric" maxlength="1" require/>
                             </div><br>                        
                             </form>
-                            <button onclick="checkcode();" class="btn btn-success" style="margin-left:35%;"  id="confirm_code">Xác nhận</button>
+                            <button onclick="checkcode();" class="btn btn-primary" style="margin-left:20%;"  id="confirm_code">Xác nhận</button>
+                            <button onclick="reloadcode();" class="btn btn-secondary" style="margin-left:5%;"  id="reloadcode">Gửi lại<i class="fa fa-refresh fa-spin" style="font-size:15px"></i></button> 
                             <br>   
-                            <h4 style="color:red;text-align:center;margin-top:15px;" id="error-otp"></h4>
+                            <h4 style="color:red;text-align:center;" id="error-otp"></h4>
                         </div>
                         <div id="newPassform"> 
                             <form action="#" method="get">
@@ -173,9 +175,10 @@
                             <div>
                             <b>Nhập lại mật khẩu mới<a style="color:red;">*</a></b><br>
                             <input id="confirm_pass" type="password"  placeholder="Nhập lại mật khẩu mới" require/>
-                            </div> <br>                     
+                            </div><br>                     
                             </form>
-                            <button onclick="checkpass();" class="btn btn-success" style="margin-left:35%;"  id="confirm_newPass">Xác nhận</button>   
+                            <button onclick="checkpass();" class="btn btn-primary" style="margin-left:35%;" id="confirm_newPass">Xác nhận</button>   
+                            <h4 style="color:red;text-align:center;" id="error-newpass"></h4>                       
                         </div>
                     </div> 
 
@@ -285,7 +288,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         margin-left:25px;
     }
    
-    #signUpform, #recoverPassform,#OTPform,#newPassform{
+    #signUpform,#recoverPassform,#OTPform,#newPassform{
         display: none;
     }
     h2{
@@ -318,6 +321,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 }
 .input-otp:focus{
   outline:none;
+}
+div>button{
+    display:inline;
 }
 </style>
     <!-- ##### Footer Area End ##### -->
