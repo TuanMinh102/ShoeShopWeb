@@ -95,21 +95,37 @@ inputs.addEventListener("keyup", function (e) {
 function checkcode()
 {
     var code_input="";
+    var fill=1;
     for(var i=1;i<=5;i++)
     {
+        if(document.getElementById("i"+i).value=='')
+        {
+           fill=0;
+        }
          code_input+=document.getElementById("i"+i).value;
     }
-    if(code_input==this.otp_object.get())
+
+    if(fill==0)
     {
+        document.getElementById("error-otp").style.display="block";
+        document.getElementById("error-otp").innerHTML="Mã OTP gồm 5 số";
+        setTimeout(()=>{
+            document.getElementById("error-otp").style.display="none";
+        },4000);
+    }
+   else {
+         if(code_input==this.otp_object.get())
+         {
        document.getElementById("newPassform").style.display="block";
        document.getElementById("OTPform").style.display="none";
-    }
-    else{
+         }
+         else{
         document.getElementById("error-otp").style.display="block";
         document.getElementById("error-otp").innerHTML="Sai mã OTP";
         setTimeout(()=>{
             document.getElementById("error-otp").style.display="none";
         },4000);
+         }
     }
 }
 //kiem tra mat khau de cap nhat mat khau moi

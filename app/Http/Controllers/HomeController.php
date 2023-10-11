@@ -14,4 +14,12 @@ class HomeController extends Controller
         $giays = $giays->get();     
         return view("home",compact('giays'));
     }
+    public function welcomeview()
+    {
+        return view("welcome");
+    }
+    public function chatview()
+    {
+        return view("chat");
+    }
 }

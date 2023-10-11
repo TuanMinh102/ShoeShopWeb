@@ -21,6 +21,8 @@ use App\Http\Controllers\AdminController;
 |
 */
 Route::get('/home',[HomeController::class,"homeview"]);
+Route::get('/',[HomeController::class,"welcomeview"]);
+Route::get('/chat',[HomeController::class,"chatview"]);
 
 Route::get('/login',[UserController::class,"loginview"]);
 Route::get('/login{id}',[UserController::class,"logout"]);
@@ -46,6 +48,8 @@ Route::get('/tt',[CheckoutController::class,"checkoutview"]);
 Route::get('/ttoan',[CheckoutController::class,"thanhtoan"]);
 
 Route::get('/admin',[AdminController::class,"adminview"]);
+
+
 
 
 
