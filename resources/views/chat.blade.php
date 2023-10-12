@@ -28,51 +28,61 @@
 </head>
 <body>
 <div>
+
     <div>
       <a href="/logout">Logout</a>
     </div>
   </div>
   <div id="app" class="container">
+    @if($cookie==0)
     <h3 class=" text-center">Messaging | User: Nguyen Minh Tuan</h3>
+    @else 
+    <h3 class=" text-center">Messaging | Admin</h3>@endif
     <div class="messaging">
       <div class="inbox_msg">
         <div class="inbox_people">
           <div class="inbox_chat">
-            <div v-for="user in users" class="chat_list">
+            @foreach($list as $row)
+            <div  class="chat_list" id="user{{$row->MaTaiKhoan}}" >
               <div class="chat_people">
                 <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
                 <div class="chat_ib">
-                  <h5> minh tuan <span class="chat_date">Dec 25</span></h5>
+                  <h5> {{$row->TaiKhoan}} <span class="chat_date">Dec 25</span></h5>
                 </div>
               </div>
             </div>
+            @endforeach
           </div>
-        </div>
+        </div> 
         <div class="mesgs">
-          <div class="msg_history">
-            <div v-for="message in messages">
-              <div v-if="message.user.id !== id" class="incoming_msg">
+          <div class="msg_history" id="msg">
+          @foreach($chat as $row)
+            <div>
+               @if($row->IsUser != $cookie)
+              <div  class="incoming_msg">
                 <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                 </div>
                 <div class="received_msg">
                   <div class="received_withd_msg">
-                    <p>abcxyz</p>
-                    <span class="time_date"> 11:01 AM | June 9</span>
+                    <p>{{$row->NoiDung}}</p>
+                    <span class="time_date" style="font-size:10px;">{{$row->ThoiGian}}</span>
                   </div>
                 </div>
               </div>
-              <div v-else class="outgoing_msg">
+              @else
+              <div class="outgoing_msg">
                 <div class="sent_msg">
-                  <p>hello chao ban</p>
-                  <span class="time_date"> 11:01 AM | June 9</span>
+                  <p>{{$row->NoiDung}}</p>
+                  <span class="time_date" style="font-size:10px;">{{$row->ThoiGian}}</span>
                 </div>
-              </div>
+              </div>@endif
             </div>
+            @endforeach
           </div>
           <div class="type_msg">
             <div class="input_msg_write">
-              <input v-model="message" @keyup.enter="sendMessage" type="text" class="write_msg" placeholder="Type a message" />
-              <button @click="sendMessage" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+              <input  type="text" class="write_msg" placeholder="Type a message" id="message" />
+              <button class="msg_send_btn" type="button" onclick="send({{$cookie}},1)"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
             </div>
           </div>
         </div>

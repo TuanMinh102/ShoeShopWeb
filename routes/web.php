@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ChatController;
 
 
 
@@ -21,8 +22,8 @@ use App\Http\Controllers\AdminController;
 |
 */
 Route::get('/home',[HomeController::class,"homeview"]);
+Route::get('/home2',[HomeController::class,"homeview2"]);
 Route::get('/',[HomeController::class,"welcomeview"]);
-Route::get('/chat',[HomeController::class,"chatview"]);
 
 Route::get('/login',[UserController::class,"loginview"]);
 Route::get('/login{id}',[UserController::class,"logout"]);
@@ -49,7 +50,9 @@ Route::get('/ttoan',[CheckoutController::class,"thanhtoan"]);
 
 Route::get('/admin',[AdminController::class,"adminview"]);
 
-
+Route::get('/chat',[ChatController::class,"chatview"]);
+Route::get('/chat{id}',[ChatController::class,"get_content_chat"]);
+Route::get('/send',[ChatController::class,"sendMessage"]);
 
 
 

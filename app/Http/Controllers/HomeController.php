@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 class HomeController extends Controller
 {
-    //Load San Pham
+   // Load San Pham
     public function homeview()
     {
         $giays = DB::table('giay')->select('*');
@@ -18,8 +18,8 @@ class HomeController extends Controller
     {
         return view("welcome");
     }
-    public function chatview()
+    public function homeview2()
     {
-        return view("chat");
+        return view("home2");
     }
 }
